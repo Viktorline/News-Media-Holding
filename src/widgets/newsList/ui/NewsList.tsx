@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { Spin, Alert } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useAppDispatch, useAppSelector } from "../../../shared/hooks/redux";
@@ -22,11 +22,18 @@ export const NewsList = ({
     if (news.length === 0) dispatch(fetchNews() as any);
   }, []);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     if (!loading && hasMore) {
       dispatch(loadMoreNews() as any);
     }
-  };
+  }, [loading, hasMore, dispatch]);
+
+  const handleNewsClick = useCallback(
+    (post: News) => {
+      onNewsClick(post);
+    },
+    [onNewsClick]
+  );
 
   if (error) {
     return (
@@ -66,7 +73,7 @@ export const NewsList = ({
       }
     >
       {news.map((post) => (
-        <NewsCard key={post.id} news={post} onClick={() => onNewsClick(post)} />
+        <NewsCard key={post.id} news={post} onClick={handleNewsClick} />
       ))}
     </InfiniteScroll>
   );

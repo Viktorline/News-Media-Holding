@@ -40,3 +40,12 @@ body {
   flex-direction: column;
   flex: 1;
 }
+
+.ant-modal-content {
+  padding-top: 52px !important;
+}
+
+.ant-modal-close {
+  top: 16px !important;
+  right: 24px !important;
+}
