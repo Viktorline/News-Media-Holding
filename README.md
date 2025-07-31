@@ -1,69 +1,53 @@
-# React + TypeScript + Vite
+# 📰 News Media Holding - Test Task
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Modern web application for displaying a news feed with infinite scroll and responsive design.
 
-Currently, two official plugins are available:
+## 🛠️ Technologies
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19
+- TypeScript
+- Redux Toolkit
+- Ant Design
+- React Infinite Scroll
+- Axios
+- Vite
 
-## Expanding the ESLint configuration
+## 📱 Responsiveness
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The application adapts to different screen sizes:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Desktop (1280px+)** - 3 news columns
+- **Tablet (720px-1279px)** - 2 news columns
+- **Mobile (<720px)** - 1 news column
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 🔌 API
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Uses [DummyJSON API](https://dummyjson.com/) for test data:
+
+- `GET /posts?limit=10&skip={skip}` - get news list
+
+## 🚀 Quick Start
+
+### Install dependencies
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Run in development mode
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run dev
+```
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Build for production
+
+```bash
+npm run build
+```
+
+### Preview build
+
+```bash
+npm run preview
 ```
