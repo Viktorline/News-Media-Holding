@@ -1,9 +1,11 @@
 import { useEffect } from "react";
-import { Card, Spin, Alert } from "antd";
+import { Spin, Alert } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useAppDispatch, useAppSelector } from "../../../shared/hooks/redux";
 import type { News } from "../../../entities/news/model/types";
 import { fetchNews, loadMoreNews } from "../../../entities/news/api/getNews";
+import { NewsCard } from "../../../entities/news/ui/NewsCard";
+import { useResize } from "../../../shared/hooks/useResize";
 
 export const NewsList = ({
   onNewsClick,
@@ -14,6 +16,7 @@ export const NewsList = ({
   const { news, loading, hasMore, error } = useAppSelector(
     (state) => state.newsList
   );
+  const { isScreen720, isScreen1280 } = useResize();
 
   useEffect(() => {
     if (news.length === 0) dispatch(fetchNews() as any);
@@ -40,6 +43,15 @@ export const NewsList = ({
   return (
     <InfiniteScroll
       dataLength={news.length}
+      style={{
+        display: "grid",
+        gridTemplateColumns: isScreen1280
+          ? "repeat(3, 1fr)"
+          : isScreen720
+          ? "repeat(2, 1fr)"
+          : "repeat(1, 1fr)",
+        gap: "12px",
+      }}
       next={handleLoadMore}
       hasMore={hasMore}
       loader={
@@ -54,14 +66,7 @@ export const NewsList = ({
       }
     >
       {news.map((post) => (
-        <Card
-          key={post.id}
-          onClick={() => onNewsClick(post)}
-          style={{ marginBottom: 12, cursor: "pointer" }}
-          hoverable
-        >
-          <h3>{post.title}</h3>
-        </Card>
+        <NewsCard key={post.id} news={post} onClick={() => onNewsClick(post)} />
       ))}
     </InfiniteScroll>
   );

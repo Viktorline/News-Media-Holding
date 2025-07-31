@@ -1,6 +1,12 @@
 export interface News {
-  id: string;
+  id: number;
   title: string;
-  text: string;
-  date: string;
+  body: string;
+  tags: string[];
+  reactions: {
+    likes: number;
+    dislikes: number;
+  };
+  views: number;
+  userId: number;
 }
