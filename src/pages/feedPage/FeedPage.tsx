@@ -14,7 +14,7 @@ export const FeedPage = () => {
 
   return (
     <div>
-      <h2>Лента новостей</h2>
+      <h2>Лента</h2>
       <NewsList onNewsClick={(post) => dispatch(openNewsModal(post))} />
       <NewsModal
         news={selectedNews}

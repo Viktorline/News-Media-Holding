@@ -1,12 +1,13 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchNews, loadMoreNews } from "../../../entities/news/api/getNews";
 import type { News } from "../../../entities/news/model/types";
-import { mockNews } from "../../../entities/news/model/mockData";
 
 interface NewsState {
   news: News[];
   loading: boolean;
   hasMore: boolean;
   skip: number;
+  error: string | null;
 }
 
 const initialState: NewsState = {
@@ -14,43 +15,59 @@ const initialState: NewsState = {
   loading: false,
   hasMore: true,
   skip: 0,
+  error: null,
 };
 
-export const fetchNews = createAsyncThunk<
-  News[],
-  void,
-  { state: { news: NewsState } }
->("news/fetchNews", async (_, { getState }) => {
-  // const { skip } = getState().news;
-  // const response = await axios.get(
-  //   `https://dummyjson.com/posts?limit=10&skip=${skip}`
-  // );
-  // const response = await fetch(
-  //   `https://dummyjson.com/posts?limit=10&skip=${skip}`
-  // );
-  // const data = await response.json();
-  return mockNews;
-});
+const handlePending = (state: NewsState) => {
+  state.loading = true;
+  state.error = null;
+};
+
+const handleFulfilled = (state: NewsState, action: any, isInitial: boolean) => {
+  if (isInitial) {
+    state.news = action.payload;
+    state.skip = 10;
+  } else {
+    state.news.push(...action.payload);
+    state.skip += 10;
+  }
+  state.hasMore = action.payload.length === 10;
+  state.loading = false;
+};
+
+const handleRejected = (state: NewsState, action: any) => {
+  state.loading = false;
+  state.error = action.error.message || "Ошибка загрузки новостей";
+};
 
 const newsSlice = createSlice({
   name: "news",
   initialState,
-  reducers: {},
+  reducers: {
+    resetNews: (state) => {
+      state.news = [];
+      state.skip = 0;
+      state.hasMore = true;
+      state.error = null;
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchNews.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchNews.fulfilled, (state, action) => {
-        state.news.push(...action.payload);
-        state.skip += 10;
-        state.hasMore = action.payload.length === 10;
-        state.loading = false;
-      })
-      .addCase(fetchNews.rejected, (state) => {
-        state.loading = false;
-      });
+      .addCase(fetchNews.pending, handlePending)
+      .addCase(fetchNews.fulfilled, (state, action) =>
+        handleFulfilled(state, action, true)
+      )
+      .addCase(fetchNews.rejected, handleRejected)
+      .addCase(loadMoreNews.pending, handlePending)
+      .addCase(loadMoreNews.fulfilled, (state, action) =>
+        handleFulfilled(state, action, false)
+      )
+      .addCase(loadMoreNews.rejected, handleRejected);
   },
 });
 
+export const { resetNews, clearError } = newsSlice.actions;
 export default newsSlice.reducer;
