@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { fetchNews, loadMoreNews } from "../../../entities/news/api/getNews";
 import type { News } from "../../../entities/news/model/types";
 
@@ -23,7 +24,11 @@ const handlePending = (state: NewsState) => {
   state.error = null;
 };
 
-const handleFulfilled = (state: NewsState, action: any, isInitial: boolean) => {
+const handleFulfilled = (
+  state: NewsState,
+  action: PayloadAction<News[]>,
+  isInitial: boolean
+) => {
   if (isInitial) {
     state.news = action.payload;
     state.skip = 10;
@@ -33,11 +38,12 @@ const handleFulfilled = (state: NewsState, action: any, isInitial: boolean) => {
   }
   state.hasMore = action.payload.length === 10;
   state.loading = false;
+  state.error = null;
 };
 
 const handleRejected = (state: NewsState, action: any) => {
   state.loading = false;
-  state.error = action.error.message || "Ошибка загрузки новостей";
+  state.error = action.error?.message || "Ошибка загрузки новостей";
 };
 
 const newsSlice = createSlice({

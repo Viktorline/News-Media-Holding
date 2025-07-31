@@ -19,12 +19,12 @@ export const NewsList = ({
   const { isScreen720, isScreen1280 } = useResize();
 
   useEffect(() => {
-    if (news.length === 0) dispatch(fetchNews() as any);
-  }, []);
+    if (news.length === 0) dispatch(fetchNews());
+  }, [dispatch, news.length]);
 
   const handleLoadMore = useCallback(() => {
     if (!loading && hasMore) {
-      dispatch(loadMoreNews() as any);
+      dispatch(loadMoreNews());
     }
   }, [loading, hasMore, dispatch]);
 
