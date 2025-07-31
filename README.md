@@ -2,6 +2,8 @@
 
 Modern web application for displaying a news feed with infinite scroll and responsive design.
 
+**Deploy: https://zippy-toffee-c8968d.netlify.app**
+
 ## 🛠️ Technologies
 
 - React 19
